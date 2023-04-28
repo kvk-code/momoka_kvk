@@ -1,31 +1,27 @@
-# Use an official Node.js base image
-FROM node:14
+FROM node:18.14-alpine as base
 
-# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (or pnpm-lock.yaml if you have it) into the working directory
-COPY package.json ./
-COPY package-lock.json ./
-
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY src ./src
+COPY .env ./
 # Install pnpm locally in your project directory
 RUN npm install pnpm
 
 # Install project dependencies using pnpm
 RUN npx pnpm install
 
-# Copy the rest of your application code
-COPY . .
-
-# Set the user and group ownership of the working directory (optional, but can help with permission issues)
 RUN chown -R node:node /usr/src/app
 
-# Change to a non-root user (optional, but recommended for security)
 USER node
 
-# Expose the port your app runs on
-EXPOSE 3000
+RUN npm install
+RUN npm run build
 
-# Start your application
-CMD ["npm", "start"]
+COPY lib ./lib
+
+EXPOSE 3008
+
+CMD ["npm", "run", "start:native"]
 
