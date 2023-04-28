@@ -7,9 +7,6 @@ COPY tsconfig.json ./
 COPY src ./src
 COPY .env ./
 
-RUN mkdir -p /usr/src/app
-
-
 RUN chown -R node:node /usr/src/app
 
 USER node
