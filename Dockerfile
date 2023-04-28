@@ -10,6 +10,7 @@ COPY .env ./
 RUN chown -R node:node /usr/src/app
 
 USER node
+RUN npm install -g pnpm
 
 RUN npm install
 RUN npm run build
